@@ -22,7 +22,14 @@ public class QueryApiController {
     private CallDetailsQueryService callDetailsQueryService;
 
     @GetMapping("/query")
-    public ResponseEntity<List<ResponseDto>> query(@Valid @ModelAttribute RequestDto request) {
+    public ResponseEntity<?> searchCallDetails(@Valid @ModelAttribute RequestDto request) {
+
+        if (request.getRecordDateStart() == null || request.getRecordDateStart().isBlank()) {
+            return ResponseEntity.badRequest().body("Start date is mandatory");
+        }
+        if (request.getRecordDateEnd() == null || request.getRecordDateEnd().isBlank()) {
+            return ResponseEntity.badRequest().body("End date is mandatory");
+        }
         List<ResponseDto> response = callDetailsQueryService.queryRecords(request);
         return ResponseEntity.ok(response);
     }
