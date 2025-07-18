@@ -6,7 +6,7 @@ This is **Application 2** of the USSD Event Processor system. It provides a **RE
 
 ## 📌 Features
 
-- 🔍 Query USSD call records via a POST API
+- 🔍 Query USSD call records via a GET API
 - 📅 Mandatory date range filters: `record_date_start`, `record_date_end`
 - 📱 Optional filters: `msisdn`, `imsi`
 - 🧾 Returns a list of matched records with fields: `RECORD_DATE`, `MSISDN`, `IMSI`
