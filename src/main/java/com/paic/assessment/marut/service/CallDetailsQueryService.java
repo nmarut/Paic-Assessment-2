@@ -7,7 +7,6 @@ import com.paic.assessment.marut.repository.CallDetailsRecordsRepository;
 import com.paic.assessment.marut.specification.CallDetailsSpecification;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -22,17 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class CallDetailsQueryService {
 
-	
-	@Autowired
-    private CallDetailsRecordsRepository callDetailsRecordsrepository;
+    @Autowired
+    private CallDetailsRecordsRepository callDetailsRecordsRepository;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public List<ResponseDto> queryRecords(RequestDto request) {
 
-
         if (request.getRecordDateStart() == null || request.getRecordDateStart().isBlank() ||
-                request.getRecordDateEnd() == null || request.getRecordDateEnd().isBlank()) {
+            request.getRecordDateEnd() == null || request.getRecordDateEnd().isBlank()) {
 
             log.warn("Start date and end date are mandatory.");
             throw new IllegalArgumentException("Start date and end date are mandatory. Please provide both values.");
@@ -41,9 +38,10 @@ public class CallDetailsQueryService {
         LocalDateTime startDate = LocalDateTime.parse(request.getRecordDateStart(), formatter);
         LocalDateTime endDate = LocalDateTime.parse(request.getRecordDateEnd(), formatter);
 
-        log.info("Inside Call Details Query Service");
+        log.info("Executing Call Details Query Service");
+
         Specification<CallDetailsRecordEntity> specification = Specification.where(
-                CallDetailsSpecification.recordDateBetween(startDate, endDate)
+            CallDetailsSpecification.recordDateBetween(startDate, endDate)
         );
 
         if (request.getMsisdn() != null && !request.getMsisdn().isBlank()) {
@@ -54,10 +52,10 @@ public class CallDetailsQueryService {
             specification = specification.and(CallDetailsSpecification.imsiEquals(request.getImsi()));
         }
 
-        List<CallDetailsRecordEntity> results = callDetailsRecordsrepository.findAll(specification);
+        List<CallDetailsRecordEntity> results = callDetailsRecordsRepository.findAll(specification);
 
-        if(results.isEmpty()){
-            log.info("No call detail records found for the Dates Provided.");
+        if (results.isEmpty()) {
+            log.info("No call detail records found for the provided dates.");
             return Collections.emptyList();
         }
 
