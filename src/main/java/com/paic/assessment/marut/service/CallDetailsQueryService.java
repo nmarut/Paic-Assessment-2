@@ -27,11 +27,8 @@ public class CallDetailsQueryService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public List<ResponseDto> queryRecords(RequestDto request) {
-
         if (request.getRecordDateStart() == null || request.getRecordDateStart().isBlank() ||
             request.getRecordDateEnd() == null || request.getRecordDateEnd().isBlank()) {
-
-            log.warn("Start date and end date are mandatory.");
             throw new IllegalArgumentException("Start date and end date are mandatory. Please provide both values.");
         }
 
@@ -55,7 +52,7 @@ public class CallDetailsQueryService {
         List<CallDetailsRecordEntity> results = callDetailsRecordsRepository.findAll(specification);
 
         if (results.isEmpty()) {
-            log.info("No call detail records found for the provided dates.");
+            log.info("No call detail records found for the provided filters.");
             return Collections.emptyList();
         }
 
