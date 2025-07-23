@@ -6,6 +6,7 @@ import com.paic.assessment.marut.entity.CallDetailsRecordEntity;
 import com.paic.assessment.marut.repository.CallDetailsRecordsRepository;
 import com.paic.assessment.marut.specification.CallDetailsSpecification;
 
+import com.paic.assessment.marut.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +25,6 @@ public class CallDetailsQueryService {
     @Autowired
     private CallDetailsRecordsRepository callDetailsRecordsRepository;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public List<ResponseDto> queryRecords(RequestDto request) {
         if (request.getRecordDateStart() == null || request.getRecordDateStart().isBlank() ||
@@ -32,8 +32,8 @@ public class CallDetailsQueryService {
             throw new IllegalArgumentException("Start date and end date are mandatory. Please provide both values.");
         }
 
-        LocalDateTime startDate = LocalDateTime.parse(request.getRecordDateStart(), formatter);
-        LocalDateTime endDate = LocalDateTime.parse(request.getRecordDateEnd(), formatter);
+        LocalDateTime startDate = LocalDateTime.parse(request.getRecordDateStart(), DateUtils.formatter);
+        LocalDateTime endDate = LocalDateTime.parse(request.getRecordDateEnd(), DateUtils.formatter);
 
         log.info("Executing Call Details Query Service");
 
